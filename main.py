@@ -149,9 +149,10 @@ def train(model, optimizer, scheduler, dataset, start, length):
         loss = (loss1 + loss2) / 2
         losses.append(loss.item())
         loss.backward()
+        torch.nn.utils.clip_grad_norm(model.parameters(), config.grad_clip)
+
         optimizer.step()
         scheduler.step()
-        torch.nn.utils.clip_grad_norm(model.parameters(), config.grad_clip)
     loss_avg = np.mean(losses)
     print("STEP {:8d} loss {:8f}\n".format(i + 1, loss_avg))
 
